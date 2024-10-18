@@ -1,5 +1,5 @@
 "use client";
-
+import { SignInButton, SignedIn, SignedOut, UserButton } from "@clerk/nextjs";
 import Image from "next/image";
 import React from "react";
 import { motion } from "framer-motion";
@@ -55,9 +55,10 @@ export default function Home() {
           animate={{ opacity: 1, y: 0 }}
         >
           <span className="font-normal">
-             <span className="font-bold underline">  TeachersHub</span> is a Next.js platform where students can rate and
-            comment on university professors. Users can upvote, downvote, and
-            engage with professors' profiles based on their teaching expertise
+            <span className="font-bold underline"> TeachersHub</span> is a
+            Next.js platform where students can rate and comment on university
+            professors. Users can upvote, downvote, and engage with professors'
+            profiles based on their teaching expertise
           </span>
           .
         </motion.h1>
@@ -71,11 +72,13 @@ export default function Home() {
           }}
         >
           <Link
-            href="#"
+            href="/Votes"
             className="group bg-gray-900 text-white px-7 py-3 flex items-center gap-2 rounded-full outline-none focus:scale-110 hover:scale-110 hover:bg-gray-950 active:scale-105 transition"
           >
             Start Voting
           </Link>
+          
+          
         </motion.div>
       </section>
     </main>

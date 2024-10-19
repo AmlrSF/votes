@@ -1,5 +1,14 @@
 import { NextResponse } from 'next/server';
 import Teacher from "@/modal/dbTeacher";
+import { v2 as cloudinary } from 'cloudinary';
+
+
+cloudinary.config({ 
+  cloud_name: 'dwm5fb9l0', 
+  api_key: '613126155286866', 
+  api_secret: process.env.API_CLOUDINARY_SECRET // Click 'View API Keys' above to copy your API secret
+});
+
 
 // GET: Fetch all teachers
 export async function GET() {
@@ -16,9 +25,15 @@ export async function GET() {
 export async function POST(request: Request) {
   try {
     
+    
     const data = await request.json(); 
     console.log(data)
-    const newTeacher = await Teacher.create(data); 
+    const photoUrl = await cloudinary.uploader.upload(data.image);
+
+    const newTeacher = await Teacher.create({
+      ...data,
+      image:photoUrl.url
+    }); 
     
 
     return NextResponse.json(newTeacher, { status: 201 });

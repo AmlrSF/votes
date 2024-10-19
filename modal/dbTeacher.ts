@@ -7,7 +7,7 @@ export interface ITeacher extends Document {
   etablissement: string;
   image?: string; // Optional
   tags: string[];
-  upvotes: number;
+  upvotes: string[];
   comments: {
     user: mongoose.Schema.Types.ObjectId; // Reference to User
     commentText: string;
@@ -40,8 +40,8 @@ const teacherSchema = new Schema<ITeacher>({
     required: true,
   },
   upvotes: {
-    type: Number,
-    default: 0,
+    type: [String], // Change to an array of strings
+    default: [],
   },
   comments: [
     {

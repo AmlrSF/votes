@@ -13,6 +13,8 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import Teacher from "../../components/Teacher";
+import toast from "react-hot-toast";
+
 
 const Votes = () => {
   const [formData, setFormData] = useState({
@@ -21,12 +23,13 @@ const Votes = () => {
     etablissement: "",
     tags: "",
     image: "",
-
   });
 
-  const [teachers, setteachers] = useState([]);
-
-
+  const [teachers, setteachers] = useState<any[]>([]);
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [previewImage, setPreviewImage] = useState<string | null>(null); // To preview image
+  const [loading , setLoding ] = useState(false);
+  // Handle input changes
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { id, value } = e.target;
     setFormData((prevData) => ({
@@ -34,56 +37,64 @@ const Votes = () => {
       [id]: value,
     }));
   };
+
+  // Fetch teachers from the API
   const fetchTeachers = async () => {
     try {
-      const response = await fetch('/api/teachers'); // Adjust the URL if necessary
-  
+      const response = await fetch("/api/teachers"); // Adjust the URL if necessary
+
       if (!response.ok) {
         const errorData = await response.json();
         throw new Error(`Failed to fetch teachers: ${errorData.message}`);
       }
-  
+
       const teachers = await response.json();
       setteachers(teachers);
-      console.log('Fetched teachers:', teachers); // Handle the fetched data
+      setPreviewImage(null);
     } catch (error) {
-      console.error('Error:', error);
+      console.error("Error:", error);
     }
   };
-  
-  // Call the function, for example in a useEffect hook
+
+  // Fetch teachers when the component mounts
   useEffect(() => {
     fetchTeachers();
   }, []);
 
+  // Handle form submission
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    let teacher:any = {
+
+    // Prepare the teacher object for submission
+    let teacher: any = {
       firstName: formData.firstName,
       lastName: formData.lastName,
       etablissement: formData.etablissement,
-      tags: formData.tags.split(",").map(tag => tag.trim()), 
+      tags: formData.tags.split(",").map((tag) => tag.trim()), // Split and trim tags
       image: formData.image,
-    }
-    console.log(teacher);
-    
+    };
+
     try {
-      const response = await fetch('/api/teachers', {
-        method: 'POST',
+      const response = await fetch("/api/teachers", {
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
         body: JSON.stringify(teacher),
       });
 
       if (!response.ok) {
-        throw new Error('Error creating teacher');
+
+        toast.error("something went wrong!");
       }
 
       const newTeacher = await response.json();
-      console.log('Teacher created:', newTeacher);
+      console.log("Teacher created:", newTeacher);
+      toast.success("Email sent successfully!");
+      // Refresh teacher list after submission
+      fetchTeachers();
 
-     
+      // Reset the form
       setFormData({
         firstName: "",
         lastName: "",
@@ -92,26 +103,54 @@ const Votes = () => {
         image: "",
       });
 
+      // Close the dialog
+      setIsDialogOpen(false);
     } catch (error) {
       console.error(error);
-      
+    }
+  };
+  // Handle image file selection and convert to base64
+  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.readAsDataURL(file); // Convert image to base64
+      reader.onloadend = () => {
+        setFormData((prevData) => ({
+          ...prevData,
+          image: reader.result as string, // Set base64 string
+        }));
+        setPreviewImage(reader.result as string); // Preview the image
+      };
     }
   };
 
+  // Handle opening and closing the dialog
+  const handleOpenDialog = () => setIsDialogOpen(true);
+  const handleCloseDialog = () => setIsDialogOpen(false);
+
   return (
-    <section className="container">
-      <div className="flex justify-between w-full items-center border-b pb-5 border-gray-900">
+    <section className="container min-h-[90vh]">
+      <div
+        className="flex justify-between w-full items-center 
+      border-b pb-5 border-gray-900 dark:border-white"
+      >
         <div className="text-left">
-          <h1 className="font-bold text-3xl">Votes</h1>
-          <p className="text-sm">
-            Upvote your favorite teacher and help highlight the best educators in the community!
+          <h1 className="font-bold text-3xl dark:text-white">Votes</h1>
+          <p className="text-sm dark:text-white ">
+            Upvote your favorite teacher and help highlight the best educators
+            in the community!
           </p>
         </div>
-        <Dialog>
+        <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
           <DialogTrigger asChild>
             <Button
-              variant="outline"
-              className="group bg-gray-900 text-white px-7 py-3 flex items-center gap-2 rounded-full hover:text-white outline-none focus:scale-110 hover:scale-110 hover:bg-gray-950 active:scale-105 transition"
+              
+              className="group bg-gray-900 text-white px-7 
+              py-3 flex items-center gap-2 rounded-full hover:text-white 
+              outline-none focus:scale-110 hover:scale-110 hover:bg-gray-950 
+              active:scale-105 transition"
+              onClick={handleOpenDialog}
             >
               New
             </Button>
@@ -121,7 +160,8 @@ const Votes = () => {
               <DialogHeader>
                 <DialogTitle>Add New Teacher</DialogTitle>
                 <DialogDescription>
-                  Fill in the details of the teacher. Click save when you're done.
+                  Fill in the details of the teacher. Click save when you're
+                  done.
                 </DialogDescription>
               </DialogHeader>
               <div className="grid gap-4 py-4">
@@ -149,7 +189,7 @@ const Votes = () => {
                 </div>
                 <div className="grid grid-cols-4 items-center gap-6">
                   <Label htmlFor="etablissement" className="text-right">
-                    etablissement
+                    Establishment
                   </Label>
                   <Input
                     id="etablissement"
@@ -172,21 +212,35 @@ const Votes = () => {
                 </div>
                 <div className="grid grid-cols-4 items-center gap-6">
                   <Label htmlFor="image" className="text-right">
-                    Image URL
+                    Select Image
                   </Label>
                   <Input
+                    type="file"
                     id="image"
-                    value={formData.image}
-                    onChange={handleChange}
-                    placeholder="Image URL"
+                    accept="image/*"
+                    onChange={handleImageChange}
                     className="col-span-3"
                   />
                 </div>
+                {previewImage && (
+                  <div className="grid grid-cols-4 items-center gap-6">
+                    <Label className="text-right">Preview</Label>
+                    <div className="col-span-3">
+                      <img
+                        src={previewImage}
+                        alt="Preview"
+                        className="rounded"
+                      />
+                    </div>
+                  </div>
+                )}
               </div>
               <DialogFooter>
                 <Button
                   type="submit"
-                  className="group bg-gray-900 text-white px-7 py-3 flex items-center gap-2 rounded-full outline-none focus:scale-110 hover:scale-110 hover:bg-gray-950 active:scale-105 transition"
+                  className="group bg-gray-900 text-white 
+                  px-7 py-3 flex items-center gap-2 rounded-full outline-none 
+                  focus:scale-110 hover:scale-110 hover:bg-gray-950 active:scale-105 transition"
                 >
                   Save
                 </Button>
@@ -195,14 +249,16 @@ const Votes = () => {
           </DialogContent>
         </Dialog>
       </div>
-      <div className="min-h-[50vh] card-container">
-      <>
-        {teachers.map((project :any, index) => (
-          <React.Fragment key={index}>
-            <Teacher {...project} />
-          </React.Fragment>
-        ))}
-      </>
+      <div className=" card-container">
+        {teachers.length > 0 ? (
+          teachers.map((teacher: any, index) => (
+            <React.Fragment key={index}>
+              <Teacher {...teacher} />
+            </React.Fragment>
+          ))
+        ) : (
+          <p>No teachers found.</p>
+        )}
       </div>
     </section>
   );

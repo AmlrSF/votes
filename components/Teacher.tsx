@@ -53,7 +53,7 @@ export default function Teacher({
     }
 
     try {
-      const response = await fetch(`https://teachershub.vercel.app/api/teachers/${_id}/upvote`, {
+      const response = await fetch(`/api/teachers/${_id}/upvote`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -84,7 +84,7 @@ export default function Teacher({
     // Here, you can add additional logic if needed for a different downvote API call
 
     try {
-      const response = await fetch(`https://teachershub.vercel.app/api/teachers/${_id}/downvote`, {
+      const response = await fetch(`/api/teachers/${_id}/downvote`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

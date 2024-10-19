@@ -1,6 +1,25 @@
-import mongoose from "mongoose";
+import mongoose, { Document, Schema } from "mongoose";
 
-const teacherSchema = new mongoose.Schema({
+// Define the Teacher interface
+export interface ITeacher extends Document {
+  firstName: string;
+  lastName: string;
+  etablissement: string;
+  image?: string; // Optional
+  tags: string[];
+  upvotes: number;
+  comments: {
+    user: mongoose.Schema.Types.ObjectId; // Reference to User
+    commentText: string;
+    createdAt: Date;
+  }[];
+  shares: number;
+  approve: boolean;
+  createdAt: Date;
+}
+
+// Define the Teacher schema
+const teacherSchema = new Schema<ITeacher>({
   firstName: {
     type: String,
     required: true,
@@ -9,15 +28,15 @@ const teacherSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
-  etablismment: {
+  etablissement: {
     type: String,
     required: true,
   },
   image: {
-    type: String, 
+    type: String,
   },
   tags: {
-    type: [String],  
+    type: [String],
     required: true,
   },
   upvotes: {
@@ -28,7 +47,7 @@ const teacherSchema = new mongoose.Schema({
     {
       user: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: "User", 
+        ref: "User",
         required: true,
       },
       commentText: {
@@ -45,15 +64,17 @@ const teacherSchema = new mongoose.Schema({
     type: Number,
     default: 0,
   },
+  approve: {
+    type: Boolean,
+    default: false,
+  },
   createdAt: {
     type: Date,
     default: Date.now,
   },
 });
 
-
-teacherSchema.index({ firstName: 1, lastName: 1, tags: 1 });
-
-const Teacher = mongoose.model("Teacher", teacherSchema);
+// Create the Teacher model
+const Teacher = mongoose.models.Teacher || mongoose.model<ITeacher>("Teacher", teacherSchema);
 
 export default Teacher;

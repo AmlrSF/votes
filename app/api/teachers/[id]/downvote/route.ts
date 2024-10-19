@@ -15,7 +15,7 @@ export async function POST(request: Request, { params }: { params: { id: string 
     
     if (downvoted) {
       // Remove the user ID from upvotes if already downvoted
-      teacher.upvotes = teacher.upvotes.filter((id:any) => id !== userId);
+      teacher.upvotes = teacher.upvotes.filter((id:string) => id !== userId);
     } else {
       // Optionally, you can implement a separate logic for downvotes, 
       // or just treat downvotes as negative votes.

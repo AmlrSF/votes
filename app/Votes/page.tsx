@@ -14,7 +14,23 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import Teacher from "../../components/Teacher";
 import toast from "react-hot-toast";
+import Image from 'next/image';
 
+interface Teacher {
+  firstName: string;
+  lastName: string;
+  etablissement: string;
+  image?: string; // Optional
+  tags: string[];
+  upvotes: string[]; // Changed to an array of user IDs
+  shares: number;
+  comments: {
+    user: string; // User ID or name, adjust according to your needs
+    commentText: string;
+    createdAt: Date;
+  }[];
+  _id: string;
+}
 
 const Votes = () => {
   const [formData, setFormData] = useState({
@@ -25,11 +41,10 @@ const Votes = () => {
     image: "",
   });
 
-  const [teachers, setteachers] = useState<any[]>([]);
+  const [teachers, setteachers] = useState<Teacher[]>([]);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [previewImage, setPreviewImage] = useState<string | null>(null); // To preview image
-  const [loading , setLoding ] = useState(false);
-  // Handle input changes
+
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { id, value } = e.target;
     setFormData((prevData) => ({
@@ -66,7 +81,13 @@ const Votes = () => {
     e.preventDefault();
 
     // Prepare the teacher object for submission
-    let teacher: any = {
+    const teacher: {
+      firstName: string;
+      lastName: string;
+      etablissement: string;
+      tags: string[];
+      image: string;
+    } = {
       firstName: formData.firstName,
       lastName: formData.lastName,
       etablissement: formData.etablissement,
@@ -84,7 +105,6 @@ const Votes = () => {
       });
 
       if (!response.ok) {
-
         toast.error("something went wrong!");
       }
 
@@ -127,7 +147,6 @@ const Votes = () => {
 
   // Handle opening and closing the dialog
   const handleOpenDialog = () => setIsDialogOpen(true);
-  const handleCloseDialog = () => setIsDialogOpen(false);
 
   return (
     <section className="container min-h-[90vh]">
@@ -145,7 +164,6 @@ const Votes = () => {
         <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
           <DialogTrigger asChild>
             <Button
-              
               className="group bg-gray-900 text-white px-7 
               py-3 flex items-center gap-2 rounded-full hover:text-white 
               outline-none focus:scale-110 hover:scale-110 hover:bg-gray-950 
@@ -160,7 +178,7 @@ const Votes = () => {
               <DialogHeader>
                 <DialogTitle>Add New Teacher</DialogTitle>
                 <DialogDescription>
-                  Fill in the details of the teacher. Click save when you're
+                  Fill in the details of the teacher. Click save when you are
                   done.
                 </DialogDescription>
               </DialogHeader>
@@ -226,9 +244,11 @@ const Votes = () => {
                   <div className="grid grid-cols-4 items-center gap-6">
                     <Label className="text-right">Preview</Label>
                     <div className="col-span-3">
-                      <img
+                      <Image
                         src={previewImage}
                         alt="Preview"
+                        width={500} // Specify the desired width
+                        height={300} // Specify the desired height
                         className="rounded"
                       />
                     </div>
@@ -251,7 +271,7 @@ const Votes = () => {
       </div>
       <div className=" card-container">
         {teachers.length > 0 ? (
-          teachers.map((teacher: any, index) => (
+          teachers.map((teacher:Teacher, index) => (
             <React.Fragment key={index}>
               <Teacher {...teacher} />
             </React.Fragment>

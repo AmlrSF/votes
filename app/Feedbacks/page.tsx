@@ -33,13 +33,13 @@ const Feedbacks = () => {
           <a className="underline" href="mailto:amirsouaf1212@gmail.com">
             amirsouaf1212@gmail.com
           </a>{" "}
-          or through the form below. I'd love to hear from you!
+          or through the form below. I `&apos;`d love to hear from you!
         </p>
 
         <form
           className="mt-10 flex flex-col dark:text-black"
           action={async (formData) => {
-            const { data, error } = await sendEmail(formData);
+            const { error } = await sendEmail(formData);
 
             if (error) {
               toast.error(error);

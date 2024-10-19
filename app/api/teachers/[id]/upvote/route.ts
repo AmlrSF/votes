@@ -15,7 +15,7 @@ export async function POST(request: Request, { params }: { params: { id: string 
     
     if (upvoted) {
       // Remove the user ID from upvotes if already upvoted
-      teacher.upvotes = teacher.upvotes.filter((id:any) => id !== userId);
+      teacher.upvotes = teacher.upvotes.filter((id:string) => id !== userId);
     } else {
       // Add the user ID to upvotes
       teacher.upvotes.push(userId);

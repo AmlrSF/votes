@@ -1,5 +1,4 @@
 "use client";
-import { SignInButton, SignedIn, SignedOut, UserButton } from "@clerk/nextjs";
 import Image from "next/image";
 import React from "react";
 import { motion } from "framer-motion";
@@ -57,7 +56,7 @@ export default function Home() {
           <span className="font-normal">
             <span className="font-bold underline"> TeachersHub</span> is a
             Next.js platform where students can rate and comment on university
-            professors. Users can upvote, downvote, and engage with professors'
+            professors. Users can upvote, downvote, and engage with professors
             profiles based on their teaching expertise
           </span>
           .

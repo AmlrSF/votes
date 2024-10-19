@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useState } from "react";
+import {  useState } from "react";
 import { motion } from "framer-motion";
 import { MdArrowUpward, MdArrowDownward } from "react-icons/md";
 import { FaRegCommentDots } from "react-icons/fa";
@@ -34,8 +34,7 @@ export default function Teacher({
   image,
   tags,
   upvotes: initialUpvotes,
-  shares,
-  comments,
+ 
   _id,
 }: TeacherProps) {
   const [upvotes, setUpvotes] = useState<string[]>(initialUpvotes);
@@ -107,10 +106,13 @@ export default function Teacher({
   return (
     <motion.div>
       <section className="bg-gray-100 flex flex-col items-center border border-black/5 rounded-lg overflow-hidden hover:bg-gray-200 transition w-full sm:group-even:pl-8 dark:text-white dark:bg-white/10 dark:hover:bg-white/20">
-        <img
+        <Image
           src={image || noUser.src} // Use placeholder image if none is provided
           alt={`${firstName} ${lastName}'s photo`}
-          className="rounded-full transition group-hover:scale-[1.04] mt-5 h-[100px] w-[100px] object-cover group-hover:-translate-x-3 group-hover:translate-y-3 group-hover:-rotate-2 group-even:group-hover:translate-x-3 group-even:group-hover:translate-y-3 group-even:group-hover:rotate-2 group-even:right-[initial] group-even:-left-40"
+          width="100"
+          height="100"
+          className="rounded-full transition group-hover:scale-[1.04]
+           mt-5 h-[100px] w-[100px] object-cover group-hover:-translate-x-3 group-hover:translate-y-3 group-hover:-rotate-2 group-even:group-hover:translate-x-3 group-even:group-hover:translate-y-3 group-even:group-hover:rotate-2 group-even:right-[initial] group-even:-left-40"
         />
 
         <div className="p-4 text-center flex flex-col h-full sm:group-even:ml-[18rem]">

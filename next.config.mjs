@@ -7,15 +7,13 @@ const nextConfig = {
         hostname: "images.unsplash.com",
       },
       {
-        protocol: "https",
+        protocol: "http",
         hostname: "res.cloudinary.com",
       }
      
-    ],
+    ]
   },
-  experimental: {
-    serverActions: true,
-  },
+
   eslint : {
     ignoreDuringBuilds :false
   }

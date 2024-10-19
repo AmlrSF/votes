@@ -16,6 +16,9 @@ const nextConfig = {
   experimental: {
     serverActions: true,
   },
+  eslint : {
+    ignoreDuringBuilds :false
+  }
 };
 
 export default nextConfig;

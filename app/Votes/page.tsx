@@ -56,7 +56,7 @@ const Votes = () => {
   // Fetch teachers from the API
   const fetchTeachers = async () => {
     try {
-      const response = await fetch("/api/teachers"); // Adjust the URL if necessary
+      const response = await fetch("https://teachershub.vercel.app/api/teachers"); // Adjust the URL if necessary
 
       if (!response.ok) {
         const errorData = await response.json();
@@ -96,7 +96,7 @@ const Votes = () => {
     };
 
     try {
-      const response = await fetch("/api/teachers", {
+      const response = await fetch("https://teachershub.vercel.app/api/teachers", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

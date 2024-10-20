@@ -56,7 +56,7 @@ const Votes = () => {
   // Fetch teachers from the API
   const fetchTeachers = async () => {
     try {
-      const response = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/teachers`); // Adjust the URL if necessary
+      const response = await fetch(`api/teachers`); // Adjust the URL if necessary
 
       if (!response.ok) {
         const errorData = await response.json();

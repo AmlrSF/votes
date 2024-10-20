@@ -1,7 +1,6 @@
 import { NextResponse } from 'next/server';
 import Teacher from "@/modal/dbTeacher";
 import { v2 as cloudinary } from 'cloudinary';
-import next from 'next';
 
 
 cloudinary.config({ 

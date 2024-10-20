@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import Teacher from "@/modal/dbTeacher";
 import { v2 as cloudinary } from 'cloudinary';
+import next from 'next';
 
 
 cloudinary.config({ 
@@ -14,8 +15,10 @@ cloudinary.config({
 export async function GET() {
   try {
     
-    const teachers = await Teacher.find(); 
-    return NextResponse.json(teachers);
+    //const teachers = await Teacher.find(); 
+
+    //return NextResponse.json(teachers);
+    return NextResponse.json({});
   } catch (error) {
     return NextResponse.json({ message: "Error fetching teachers", error }, { status: 500 });
   }

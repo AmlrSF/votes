@@ -65,6 +65,7 @@ const Votes = () => {
 
       const teachers = await response.json();
       setteachers(teachers);
+      console.log(teachers);
       setPreviewImage(null);
     } catch (error) {
       console.error("Error:", error);
